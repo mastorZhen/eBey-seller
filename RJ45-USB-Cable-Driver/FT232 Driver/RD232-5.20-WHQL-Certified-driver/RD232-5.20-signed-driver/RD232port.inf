@@ -1,0 +1,120 @@
+; RD232PORT.INF
+; 
+; Copyright ?2000-2014 Corechip Semiconductor, Inc
+;
+; USB serial port driver installation file for Windows 2000, XP, Server 2003, Vista, Server 2008,
+; Windows 7, Server 2008 R2 and Windows 8 (x86 and x64).
+; 
+; 
+
+[Version]
+Signature="$Windows NT$"
+DriverPackageType=PlugAndPlay
+DriverPackageDisplayName=%DESC%
+Class=Ports
+ClassGUID={4d36e978-e325-11ce-bfc1-08002be10318}
+Provider=%RD232%
+CatalogFile=RD232port.cat
+DriverVer=10/15/2014,5.20.00
+
+[SourceDisksNames]
+1=%DriversDisk%,,,
+
+[SourceDisksFiles]
+RDser2k.sys=1,i386
+
+[SourceDisksFiles.amd64]
+RDser2k.sys=1,amd64
+
+[DestinationDirs]
+RD232Port.NT.Copy=10,system32\drivers
+
+[ControlFlags]
+ExcludeFromSelect=*
+
+[Manufacturer]
+%RD232%=RD232Hw,NTamd64
+
+[RD232Hw]
+%RD232.DeviceDesc%=RD232Port.NT,RDDIBUS\COMPORT&VID_0403&PID_0000
+%RD232.DeviceDesc%=RD232Port.NT,RDDIBUS\COMPORT&VID_0FE6&PID_0232
+%RD232.DeviceDesc%=RD232Port.NT,RDDIBUS\COMPORT&VID_0FE6&PID_232A
+%RD232.DeviceDesc%=RD232Port.NT,RDDIBUS\COMPORT&VID_0FE6&PID_232B
+%RD232.DeviceDesc%=RD232Port.NT,RDDIBUS\COMPORT&VID_0FE6&PID_232C
+
+[RD232Hw.NTamd64]
+%RD232.DeviceDesc%=RD232Port.NTamd64,RDDIBUS\COMPORT&VID_0403&PID_0000
+%RD232.DeviceDesc%=RD232Port.NTamd64,RDDIBUS\COMPORT&VID_0FE6&PID_0232
+%RD232.DeviceDesc%=RD232Port.NTamd64,RDDIBUS\COMPORT&VID_0FE6&PID_232A
+%RD232.DeviceDesc%=RD232Port.NTamd64,RDDIBUS\COMPORT&VID_0FE6&PID_232B
+%RD232.DeviceDesc%=RD232Port.NTamd64,RDDIBUS\COMPORT&VID_0FE6&PID_232C
+
+[RD232Port.NT.AddService]
+DisplayName    = %SvcDesc%
+ServiceType    = 1 ; SERVICE_KERNEL_DRIVER
+StartType      = 3 ; SERVICE_DEMAND_START
+ErrorControl   = 1 ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\system32\drivers\RDser2k.sys
+LoadOrderGroup = Base
+
+
+; -------------- Serenum Driver install section
+[SerEnum_AddService]
+DisplayName    = %SerEnum.SvcDesc%
+ServiceType    = 1 ; SERVICE_KERNEL_DRIVER
+StartType      = 3 ; SERVICE_DEMAND_START
+ErrorControl   = 1 ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\serenum.sys
+LoadOrderGroup = PNP Filter
+
+[RD232Port.NT.AddReg]
+HKR,,EnumPropPages32,,"SerialPortPropPageProvider"
+
+[RD232Port.NT.Copy]
+RDser2k.sys
+
+[RD232Port.NT]
+CopyFiles=RD232Port.NT.Copy
+AddReg=RD232Port.NT.AddReg
+
+[RD232Port.NTamd64]
+CopyFiles=RD232Port.NT.Copy
+AddReg=RD232Port.NT.AddReg
+
+[RD232Port.NT.HW]
+AddReg=RD232Port.NT.HW.AddReg
+
+[RD232Port.NTamd64.HW]
+AddReg=RD232Port.NT.HW.AddReg
+
+
+[RD232Port.NT.Services]
+AddService = RD23SER2k, 0x00000002, RD232Port.NT.AddService
+AddService = Serenum,,SerEnum_AddService
+DelService = RDSERIAL
+
+[RD232Port.NTamd64.Services]
+AddService = RD23SER2k, 0x00000002, RD232Port.NT.AddService
+AddService = Serenum,,SerEnum_AddService
+DelService = RDSERIAL
+
+
+[RD232Port.NT.HW.AddReg]
+HKR,,"UpperFilters",0x00010000,"serenum"
+HKR,,"ConfigData",1,11,00,3F,3F,10,27,00,00,88,13,00,00,C4,09,00,00,E2,04,00,00,71,02,00,00,38,41,00,00,9C,80,00,00,4E,C0,00,00,34,00,00,00,1A,00,00,00,0D,00,00,00,06,40,00,00,03,80,00,00,00,00,00,00,D0,80,00,00
+HKR,,"MinReadTimeout",0x00010001,0
+HKR,,"MinWriteTimeout",0x00010001,0
+HKR,,"LatencyTimer",0x00010001,16
+
+;---------------------------------------------------------------;
+
+[Strings]
+RD232="RD232"
+DESC="CDM Driver Package - VCP Driver"
+DriversDisk="RD232 USB Drivers Disk"
+PortsClassName = "Ports (COM & LPT)"
+RD232.DeviceDesc="USB Serial Port"
+SvcDesc="RD232 USB Serial Port Driver"
+SerEnum.SvcDesc="Serenum Filter Driver"
+
+

@@ -1,0 +1,96 @@
+; RD232BUS.INF
+; 
+; Copyright ?2000-2014 Corechip Semiconductor, Inc
+; 
+; USB serial converter driver installation file for Windows 2000, XP, Server 2003, Vista, Server 2008,
+; Windows 7, Server 2008 R2 and Windows 8 (x86 and x64).
+;
+
+[Version]
+Signature="$Windows NT$"
+DriverPackageType=PlugAndPlay
+DriverPackageDisplayName=%DESC%
+Class=USB
+ClassGUID={36fc9e60-c465-11cf-8056-444553540000}
+Provider=%RD232%
+CatalogFile=RD232bus.cat
+DriverVer=10/15/2014,5.20.00
+
+[SourceDisksNames]
+1=%DriversDisk%,,,
+
+[SourceDisksFiles]
+RD232bus.sys = 1,i386
+
+[SourceDisksFiles.amd64]
+RD232bus.sys = 1,amd64
+
+[DestinationDirs]
+RD232Bus.NT.Copy = 10,system32\drivers
+RD232Bus.NTamd64.Copy = 10,system32\drivers
+
+[Manufacturer]
+%RD232%=RD232Hw,NTamd64
+
+[RD232Hw]
+%RD232.DeviceDesc%=RD232Bus.NT,USB\VID_0403&PID_0000
+%RD232.DeviceDesc%=RD232Bus.NT,USB\VID_0FE6&PID_0232
+%RD232.DeviceDesc%=RD232Bus.NT,USB\VID_0FE6&PID_232A
+%RD232.DeviceDesc%=RD232Bus.NT,USB\VID_0FE6&PID_232B
+%RD232.DeviceDesc%=RD232Bus.NT,USB\VID_0FE6&PID_232C
+
+[RD232Hw.NTamd64]
+%RD232.DeviceDesc%=RD232Bus.NTamd64,USB\VID_0403&PID_0000
+%RD232.DeviceDesc%=RD232Bus.NTamd64,USB\VID_0FE6&PID_0232
+%RD232.DeviceDesc%=RD232Bus.NTamd64,USB\VID_0FE6&PID_232A
+%RD232.DeviceDesc%=RD232Bus.NTamd64,USB\VID_0FE6&PID_232B
+%RD232.DeviceDesc%=RD232Bus.NTamd64,USB\VID_0FE6&PID_232C
+
+[ControlFlags]
+ExcludeFromSelect=*
+
+[RD232Bus.NT]
+CopyFiles=RD232Bus.NT.Copy
+AddReg=RD232Bus.NT.AddReg
+
+[RD232Bus.NTamd64]
+CopyFiles=RD232Bus.NTamd64.Copy
+AddReg=RD232Bus.NT.AddReg
+
+[RD232Bus.NT.Services]
+AddService = RD23BUS, 0x00000002, RD232Bus.NT.AddService
+
+[RD232Bus.NTamd64.Services]
+AddService = RD23BUS, 0x00000002, RD232Bus.NT.AddService
+
+[RD232Bus.NT.AddService]
+DisplayName = %SvcDesc%
+ServiceType = 1 ; SERVICE_KERNEL_DRIVER
+StartType = 3 ; SERVICE_DEMAND_START
+ErrorControl = 1 ; SERVICE_ERROR_NORMAL
+ServiceBinary = %10%\system32\drivers\RD232bus.sys
+LoadOrderGroup = Base
+AddReg = RD232Bus.NT.AddService.AddReg
+
+[RD232Bus.NT.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,RD232bus.sys
+
+[RD232Bus.NT.AddService.AddReg]
+;HKR,Parameters,"LocIds",1,31,00,00,00,32,00,00,00,00
+;HKR,Parameters,"RetryResetCount",0x10001,50
+
+
+[RD232Bus.NT.Copy]
+RD232bus.sys
+
+[RD232Bus.NTamd64.Copy]
+RD232bus.sys
+
+[Strings]
+RD232="RD232"
+DESC="RD232 USB Serial Converter Driver"
+DriversDisk="RD232 USB Drivers Disk"
+RD232.DeviceDesc="USB Serial Converter"
+SvcDesc="RD232 USB Serial BUS Driver"
+ClassName="USB"
